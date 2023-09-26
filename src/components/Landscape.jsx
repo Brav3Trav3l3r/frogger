@@ -3,7 +3,6 @@ import Tile from "./Tile";
 import { WORLD_SIZE } from "../../utils/constants";
 import { grass, road, water } from "../../utils/images";
 import styled from "styled-components";
-import { uid } from "../../utils/helperFunctions";
 
 export default function Landscape() {
   const tiles = [];
@@ -20,11 +19,12 @@ export default function Landscape() {
 
   return (
     <LandscapeStyle>
-      {tiles.map((row) => (
-        <Layer>
-          {row.map((tile) => {
-            let id = uid();
+      {tiles.map((row, y) => (
+        <Layer key={y}>
+          {row.map((tile, x) => {
             let color;
+            let coordinates = { y: y, x: x };
+
             switch (tile) {
               case "grass":
                 color = "#86FF01";
@@ -36,7 +36,10 @@ export default function Landscape() {
                 color = "#2FFFCD";
                 break;
             }
-            return <Tile key={id} color={color} />;
+
+            return (
+              <Tile key={`${x}${y}`} color={color} coordinates={coordinates} />
+            );
           })}
         </Layer>
       ))}
@@ -46,8 +49,6 @@ export default function Landscape() {
 
 const LandscapeStyle = styled.div`
   background-color: rgb(128, 109, 129);
-  width: 700px;
-  margin: 0 auto;
 `;
 
 const Layer = styled.div`
